@@ -1,0 +1,23 @@
+{
+  "name": "Shadow Computers",
+  "short_name": "ShadowComps",
+  "description": "Hosting, Web & Media Systems with part-time IT Support.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#05070F",
+  "theme_color": "#3B82F6",
+  "icons": [
+    {
+      "src": "/images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

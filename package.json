@@ -1,0 +1,16 @@
+{
+  "name": "shadow-computers-site",
+  "version": "1.0.0",
+  "description": "Shadow Computers website — Hosting, Web & Media Systems",
+  "scripts": {
+    "build": "NODE_ENV=production eleventy",
+    "start": "eleventy --serve",
+    "dev": "eleventy --serve --watch"
+  },
+  "dependencies": {
+    "@11ty/eleventy": "^2.0.1"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

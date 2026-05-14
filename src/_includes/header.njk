@@ -1,0 +1,42 @@
+<header class="site-header" role="banner">
+  <div class="header-inner">
+    <a href="/" class="logo-link" aria-label="Shadow Computers — Home">
+      <img
+        src="/images/shadow-computers-logo.png"
+        alt="Shadow Computers"
+        class="logo-img"
+        width="264"
+        height="100"
+      />
+    </a>
+
+    <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Open navigation menu">
+      <span class="hamburger-bar"></span>
+      <span class="hamburger-bar"></span>
+      <span class="hamburger-bar"></span>
+    </button>
+
+    <nav id="primary-nav" class="primary-nav" aria-label="Primary navigation">
+      <ul class="nav-list" role="list">
+        <li><a href="/" class="nav-link {% if page.url == '/' %}active{% endif %}" {% if page.url == '/' %}aria-current="page"{% endif %}>Home</a></li>
+        <li><a href="/services/" class="nav-link {% if page.url == '/services/' %}active{% endif %}" {% if page.url == '/services/' %}aria-current="page"{% endif %}>Services</a></li>
+        <li><a href="/about/" class="nav-link {% if page.url == '/about/' %}active{% endif %}" {% if page.url == '/about/' %}aria-current="page"{% endif %}>About</a></li>
+        <li><a href="/contact/" class="nav-link {% if page.url == '/contact/' %}active{% endif %}" {% if page.url == '/contact/' %}aria-current="page"{% endif %}>Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  (function () {
+    const toggle = document.querySelector('.nav-toggle');
+    const nav = document.querySelector('.primary-nav');
+    if (toggle && nav) {
+      toggle.addEventListener('click', function () {
+        const open = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', String(!open));
+        nav.classList.toggle('is-open', !open);
+      });
+    }
+  })();
+</script>

@@ -1,0 +1,40 @@
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="/" aria-label="Shadow Computers — Home">
+        <img
+          src="/images/shadow-computers-logo-icon.png"
+          alt="Shadow Computers icon"
+          class="footer-logo-icon"
+          width="100"
+          height="100"
+        />
+      </a>
+      <p class="footer-tagline">Shadow Computers<br /><span>Hosting &ndash; Email &ndash; Websites &ndash; Support</span></p>
+    </div>
+
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <ul role="list">
+        <li><a href="/">Home</a></li>
+        <li><a href="/services/">Services</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="footer-social">
+      <p class="footer-label">Steve Roberts</p>
+      <a href="https://steveroberts.me" class="footer-ext-link" target="_blank" rel="noopener noreferrer">
+        steveroberts.me ↗
+      </a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>
+      &copy; {% year %} Shadow Computers. Trading name of Steve Roberts.
+      &nbsp;&middot;&nbsp; <a href="/privacy/">Privacy Policy</a>
+      {% if site.gaId %}&nbsp;&middot;&nbsp; <a href="#" id="cookie-prefs-link">Cookie Preferences</a>{% endif %}
+    </p>
+  </div>
+</footer>

@@ -1,0 +1,26 @@
+name            = "shadowcomputers-contact"
+main            = "src/index.js"
+compatibility_date = "2025-01-01"
+
+# Route: intercepts /api/contact on the live domain before Cloudflare Pages handles it.
+# The Pages site handles everything else.
+routes = [
+  { pattern = "shadowcomputers.co.uk/api/contact", zone_name = "shadowcomputers.co.uk" }
+]
+
+# Email binding — configure the destination address in the Cloudflare dashboard:
+# Workers & Pages → shadowcomputers-contact → Settings → Email bindings
+# Binding name: CONTACT_SEND_EMAIL
+# Destination:  hello@shadowcomputers.co.uk (must be verified in Email Routing)
+[[send_email]]
+name = "CONTACT_SEND_EMAIL"
+
+# Secrets — set via `wrangler secret put <NAME>`, not stored here:
+#   TURNSTILE_SECRET   — Turnstile widget secret key
+#   CONTACT_EMAIL      — destination address (overrides the binding default)
+#   FROM_EMAIL         — verified sending address in Email Routing
+
+[env.production]
+routes = [
+  { pattern = "shadowcomputers.co.uk/api/contact", zone_name = "shadowcomputers.co.uk" }
+]

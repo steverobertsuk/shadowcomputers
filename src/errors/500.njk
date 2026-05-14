@@ -1,0 +1,19 @@
+---
+layout: error-layout.njk
+permalink: /_errors/500.html
+errorCode: "500"
+errorTitle: Server Error
+errorDesc: Something went wrong on our end. We're working to fix it.
+---
+
+<section class="error-page" aria-labelledby="error-title">
+  <div class="container">
+    <p class="error-code" aria-hidden="true">500</p>
+    <h1 class="error-title" id="error-title">Server Error</h1>
+    <p class="error-desc">
+      Something went wrong on our end. We're aware of the issue and working to
+      fix it. Please try again in a few minutes.
+    </p>
+    <a href="{{ site.url }}/" class="btn-primary">Return to Homepage</a>
+  </div>
+</section>

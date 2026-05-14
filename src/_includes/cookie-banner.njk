@@ -1,0 +1,95 @@
+{% if site.gaId %}
+<div class="cookie-banner" id="cookie-banner" role="region" aria-label="Cookie consent" hidden>
+  <div class="cookie-banner-inner">
+    <div class="cookie-banner-body">
+      <p class="cookie-banner-title">Cookie preferences</p>
+      <p class="cookie-banner-text">
+        We&rsquo;d like to use <strong>Google Analytics</strong> to understand how
+        visitors use this site &mdash; no advertising or profiling involved.
+        <a href="/privacy/#cookies">Read our cookie policy</a>
+      </p>
+    </div>
+    <div class="cookie-banner-actions">
+      <button class="btn-primary cookie-btn-accept" type="button">Accept analytics</button>
+      <button class="btn-secondary cookie-btn-decline" type="button">Decline</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var COOKIE = 'sc_consent';
+  var GA_ID  = '{{ site.gaId }}';
+  var banner = document.getElementById('cookie-banner');
+
+  // ── Cookie helpers ───────────────────────────────────────
+  function getCookie(name) {
+    var m = document.cookie.match('(?:^|; )' + name + '=([^;]*)');
+    return m ? decodeURIComponent(m[1]) : null;
+  }
+  function setCookie(name, value, days) {
+    var exp = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = name + '=' + encodeURIComponent(value)
+      + '; expires=' + exp + '; path=/; SameSite=Lax';
+  }
+  function removeCookie(name) {
+    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+  }
+
+  // ── GA loader (called only after consent) ────────────────
+  function loadGA() {
+    if (!GA_ID || window._gaLoaded) return;
+    window._gaLoaded = true;
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { dataLayer.push(arguments); };
+    gtag('js', new Date());
+    gtag('config', GA_ID, { anonymize_ip: true });
+  }
+
+  // ── Banner visibility ────────────────────────────────────
+  function showBanner() {
+    banner.removeAttribute('hidden');
+    banner.querySelector('.cookie-btn-accept').focus();
+  }
+  function hideBanner() {
+    banner.setAttribute('hidden', '');
+  }
+
+  // ── Initialise ───────────────────────────────────────────
+  var consent = getCookie(COOKIE);
+  if (consent === 'accepted') {
+    loadGA();
+  } else if (!consent) {
+    requestAnimationFrame(showBanner);
+  }
+
+  // ── Accept / decline ────────────────────────────────────
+  banner.querySelector('.cookie-btn-accept').addEventListener('click', function () {
+    setCookie(COOKIE, 'accepted', 365);
+    hideBanner();
+    loadGA();
+  });
+
+  banner.querySelector('.cookie-btn-decline').addEventListener('click', function () {
+    setCookie(COOKIE, 'declined', 365);
+    hideBanner();
+  });
+
+  // ── "Cookie preferences" footer link ────────────────────
+  var prefLink = document.getElementById('cookie-prefs-link');
+  if (prefLink) {
+    prefLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      removeCookie(COOKIE);
+      showBanner();
+    });
+  }
+}());
+</script>
+{% endif %}

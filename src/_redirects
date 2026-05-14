@@ -1,0 +1,19 @@
+# Old site → new site redirects (301 Permanent)
+
+# Main pages
+/aboutus/                   /about/     301
+/contactus/                 /contact/   301
+
+# About sub-pages (no direct equivalents — send to About)
+/aboutus/experience.php     /about/     301
+/aboutus/qualifications.php /about/     301
+
+# Service sub-pages
+/services/webdesign.php     /services/  301
+/services/hosting.php       /services/  301
+
+# Site help / utility pages
+/sitehelp/                  /           301
+/sitehelp/sitemap.php       /           301
+/sitehelp/accessible.php    /privacy/   301
+/requests/textonly.php      /           301

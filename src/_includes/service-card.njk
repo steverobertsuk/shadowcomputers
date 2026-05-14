@@ -1,0 +1,14 @@
+<article class="service-card">
+  <div class="service-card-icon" aria-hidden="true">{{ icon | safe }}</div>
+  <div class="service-card-body">
+    <h3 class="service-card-title">{{ title }}</h3>
+    <p class="service-card-desc">{{ description }}</p>
+    {% if includes %}
+    <ul class="service-card-list" role="list">
+      {% for item in includes %}
+      <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</article>

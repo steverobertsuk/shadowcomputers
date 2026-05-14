@@ -1,0 +1,178 @@
+---
+layout: layout.njk
+title: Contact
+description: Get in touch with Shadow Computers — contact Steve Roberts for hosting, web, or IT support enquiries.
+permalink: /contact/
+pageScript: "https://challenges.cloudflare.com/turnstile/v0/api.js"
+---
+
+<section class="page-hero" aria-labelledby="page-title">
+  <div class="container">
+    <p class="section-label">Get in touch</p>
+    <h1 class="page-hero-title" id="page-title">Contact</h1>
+    <p class="page-hero-sub">
+      Work is carried out on a limited, ad hoc basis outside normal working hours.
+    </p>
+  </div>
+</section>
+
+<section class="section" aria-label="Contact information and form">
+  <div class="container">
+    <div class="contact-layout">
+
+      <div class="contact-intro">
+        <p class="section-label">How to reach me</p>
+        <h2 class="section-heading">Get in touch</h2>
+        <div class="divider" aria-hidden="true"></div>
+        <p>
+          Shadow Computers operates on a limited, ad hoc basis. The best ways to make
+          contact are listed below — all enquiries are welcome, though response times
+          may vary depending on availability.
+        </p>
+
+        <div class="contact-method">
+          <div class="contact-method-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </div>
+          <div class="contact-method-body">
+            <h3>Email</h3>
+            <p>Send a message directly via email for all enquiries.</p>
+          </div>
+        </div>
+
+        <div class="contact-method">
+          <div class="contact-method-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+          </div>
+          <div class="contact-method-body">
+            <h3>Contact Form</h3>
+            <p>Use the form on this page to send a message directly.</p>
+          </div>
+        </div>
+
+        <div class="contact-method">
+          <div class="contact-method-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+          </div>
+          <div class="contact-method-body">
+            <h3>Personal Website</h3>
+            <p>
+              <a href="https://steveroberts.me" target="_blank" rel="noopener noreferrer">steveroberts.me ↗</a>
+              — for career background and professional profile.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact form -->
+      <div class="contact-form" role="region" aria-labelledby="form-heading">
+        <h2 id="form-heading">Send a message</h2>
+
+        <div id="form-message" class="notice-box" hidden aria-live="polite"></div>
+
+        <form id="contact-form" method="POST" action="/api/contact" novalidate>
+
+          <div class="form-group">
+            <label for="name">Your name</label>
+            <input type="text" id="name" name="name" autocomplete="name" placeholder="Jane Smith" required maxlength="100" />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" id="email" name="email" autocomplete="email" placeholder="jane@example.com" required maxlength="254" />
+          </div>
+
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" placeholder="Brief description of your enquiry" required maxlength="200" />
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" placeholder="Tell me about what you need help with..." required maxlength="5000"></textarea>
+          </div>
+
+          {% if site.turnstileSiteKey %}
+          <div class="form-group">
+            <div class="cf-turnstile" data-sitekey="{{ site.turnstileSiteKey }}" data-theme="dark"></div>
+          </div>
+          {% endif %}
+
+          <button type="submit" class="btn-submit" id="contact-submit">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0;" aria-hidden="true">
+              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+            Send message
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  'use strict';
+
+  var form    = document.getElementById('contact-form');
+  var btn     = document.getElementById('contact-submit');
+  var msgArea = document.getElementById('form-message');
+  var origBtn = btn.innerHTML;
+
+  function showMessage(text, isError) {
+    msgArea.textContent = text;
+    msgArea.className   = 'notice-box notice-box--' + (isError ? 'error' : 'success');
+    msgArea.hidden      = false;
+    msgArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    var fd = new FormData(form);
+    var payload = {
+      name:                   fd.get('name'),
+      email:                  fd.get('email'),
+      subject:                fd.get('subject'),
+      message:                fd.get('message'),
+      'cf-turnstile-response': fd.get('cf-turnstile-response') || '',
+    };
+
+    btn.disabled  = true;
+    btn.textContent = 'Sending…';
+    msgArea.hidden  = true;
+
+    try {
+      var res  = await fetch('/api/contact', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload),
+      });
+      var data = await res.json();
+
+      if (data.ok) {
+        showMessage('Your message has been sent. I’ll get back to you as soon as possible.', false);
+        form.reset();
+        if (window.turnstile) { turnstile.reset(); }
+      } else {
+        throw new Error(data.error || 'Something went wrong. Please try again.');
+      }
+    } catch (err) {
+      showMessage(err.message, true);
+      if (window.turnstile) { turnstile.reset(); }
+    } finally {
+      btn.disabled  = false;
+      btn.innerHTML = origBtn;
+    }
+  });
+}());
+</script>

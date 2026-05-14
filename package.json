@@ -1,6 +1,6 @@
 {
   "name": "shadow-computers-site",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Shadow Computers website — Hosting, Web & Media Systems",
   "scripts": {
     "build": "cross-env NODE_ENV=production eleventy",

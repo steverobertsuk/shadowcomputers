@@ -1,27 +1,62 @@
 ---
-layout: layout.njk
-title: Services
-description: Shadow Computers services — Hosting & Infrastructure, Websites, Web Applications, Remote Support, Microsoft 365, and Media & Streaming Systems.
-permalink: /services/
+layout: layout.11ty.njk
+title: Hosting, Web & Media Systems
+description: Shadow Computers — Hosting, Web & Media Systems with part-time IT Support. Remote support, Microsoft 365, hosting, web development, and media workflows.
 ---
 
-<section class="page-hero" aria-labelledby="page-title">
-  {% include "bg-bracket.njk" %}
+<!-- ══ HERO ══════════════════════════════════════════════ -->
+<section class="hero" aria-labelledby="hero-title">
+  {% include "bg-bracket.11ty.njk" %}
   <div class="container">
-    <p class="section-label">What I cover</p>
-    <h1 class="page-hero-title" id="page-title">Services</h1>
-    <p class="page-hero-sub">
-      All work is carried out on a limited, ad hoc basis outside normal working hours.
+    <div class="hero-layout">
+      <div class="hero-left">
+        <p class="hero-eyebrow">Hosting, Web &amp; Media Systems</p>
+        <h1 class="hero-title" id="hero-title">
+          <em>Shadow</em> Computers
+        </h1>
+        <p class="hero-sub">
+          Hands-on experience across remote support, Microsoft&nbsp;365, hosting,
+          full-stack development, and media production workflows.
+        </p>
+      </div>
+      <div class="hero-right">
+        <div class="hero-areas" role="list" aria-label="Core service areas">
+          <span class="area-pill" role="listitem">Remote Support &amp; Troubleshooting</span>
+          <span class="area-pill" role="listitem">Microsoft 365 &amp; Exchange Online</span>
+          <span class="area-pill" role="listitem">Hosting &amp; Infrastructure</span>
+          <span class="area-pill" role="listitem">Websites</span>
+          <span class="area-pill" role="listitem">Web Applications</span>
+          <span class="area-pill" role="listitem">Media &amp; Streaming Systems</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ INTRO STRIP ═══════════════════════════════════════ -->
+<section class="intro-strip" aria-label="Overview">
+  <div class="container">
+    <p>
+      Shadow Computers focuses on real systems, real users, and real environments —
+      covering remote support, Microsoft&nbsp;365, hosting, web development, and
+      media&thinsp;/&thinsp;streaming systems.
     </p>
   </div>
 </section>
 
-<section class="section" aria-label="All services">
+<!-- ══ SERVICES OVERVIEW ═════════════════════════════════ -->
+<section class="section" aria-labelledby="services-heading">
   <div class="container">
+    <p class="section-label">What I cover</p>
+    <h2 class="section-heading" id="services-heading">Services</h2>
+    <div class="divider" aria-hidden="true"></div>
+    <p class="section-lead">
+      Work is carried out on a limited, ad hoc basis outside normal working hours,
+      supporting families and small businesses with practical, real-world solutions.
+    </p>
 
     <div class="services-grid">
 
-      <!-- Hosting & Infrastructure -->
       <article class="service-card">
         <div class="service-card-icon" aria-hidden="true">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
@@ -30,7 +65,7 @@ permalink: /services/
           </svg>
         </div>
         <div class="service-card-body">
-          <h2 class="service-card-title">Hosting &amp; Infrastructure</h2>
+          <h3 class="service-card-title">Hosting &amp; Infrastructure</h3>
           <p class="service-card-desc">Managing hosting environments, DNS configuration, domains, and deployments.</p>
           <ul class="service-card-list">
             <li>DNS and domain management</li>
@@ -40,7 +75,6 @@ permalink: /services/
         </div>
       </article>
 
-      <!-- Websites -->
       <article class="service-card">
         <div class="service-card-icon" aria-hidden="true">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
@@ -49,12 +83,9 @@ permalink: /services/
           </svg>
         </div>
         <div class="service-card-body">
-          <h2 class="service-card-title">Websites</h2>
-          <p class="service-card-desc">Building and maintaining websites across static builds, WordPress, and Concrete CMS (Concrete5).</p>
+          <h3 class="service-card-title">Websites</h3>
+          <p class="service-card-desc">Building and maintaining websites across static builds, WordPress, and Concrete CMS.</p>
           <ul class="service-card-list">
-            <li>Static builds</li>
-            <li>WordPress</li>
-            <li>Concrete CMS (Concrete5)</li>
             <li>Site setup and configuration</li>
             <li>Ongoing maintenance and updates</li>
             <li>Performance optimisation</li>
@@ -62,7 +93,6 @@ permalink: /services/
         </div>
       </article>
 
-      <!-- Web Applications -->
       <article class="service-card">
         <div class="service-card-icon" aria-hidden="true">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
@@ -70,18 +100,16 @@ permalink: /services/
           </svg>
         </div>
         <div class="service-card-body">
-          <h2 class="service-card-title">Web Applications</h2>
+          <h3 class="service-card-title">Web Applications</h3>
           <p class="service-card-desc">Developing and maintaining web applications using modern frameworks, focusing on reliability and maintainability.</p>
           <ul class="service-card-list">
-            <li>Angular (frontend frameworks)</li>
-            <li>NestJS (backend services)</li>
-            <li>PostgreSQL</li>
-            <li>REST APIs</li>
+            <li>Angular frontend frameworks</li>
+            <li>NestJS backend services</li>
+            <li>PostgreSQL &amp; REST APIs</li>
           </ul>
         </div>
       </article>
 
-      <!-- Remote Support -->
       <article class="service-card">
         <div class="service-card-icon" aria-hidden="true">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
@@ -89,7 +117,7 @@ permalink: /services/
           </svg>
         </div>
         <div class="service-card-body">
-          <h2 class="service-card-title">Remote Support</h2>
+          <h3 class="service-card-title">Remote Support</h3>
           <p class="service-card-desc">Diagnosing and resolving system issues remotely, including performance problems, software faults, and configuration issues.</p>
           <ul class="service-card-list">
             <li>Remote desktop support</li>
@@ -99,7 +127,6 @@ permalink: /services/
         </div>
       </article>
 
-      <!-- Microsoft 365 -->
       <article class="service-card">
         <div class="service-card-icon" aria-hidden="true">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
@@ -107,7 +134,7 @@ permalink: /services/
           </svg>
         </div>
         <div class="service-card-body">
-          <h2 class="service-card-title">Microsoft 365</h2>
+          <h3 class="service-card-title">Microsoft 365</h3>
           <p class="service-card-desc">Working with Microsoft 365 tenants, including Exchange Online setup, mailbox configuration, and administration.</p>
           <ul class="service-card-list">
             <li>Tenant configuration</li>
@@ -117,7 +144,6 @@ permalink: /services/
         </div>
       </article>
 
-      <!-- Media & Streaming -->
       <article class="service-card">
         <div class="service-card-icon" aria-hidden="true">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
@@ -125,14 +151,12 @@ permalink: /services/
           </svg>
         </div>
         <div class="service-card-body">
-          <h2 class="service-card-title">Media &amp; Streaming Systems</h2>
-          <p class="service-card-desc">Designing and managing live and recorded media workflows, including streaming, recording, and post-production for online content and live broadcasts.</p>
+          <h3 class="service-card-title">Media &amp; Streaming Systems</h3>
+          <p class="service-card-desc">Designing and managing live and recorded media workflows, including streaming, recording, and post-production.</p>
           <ul class="service-card-list">
             <li>Live streaming setup (RTMP, simulcasting)</li>
             <li>Broadcast configuration and scene management</li>
-            <li>Video editing and production workflows</li>
-            <li>Audio processing and editing</li>
-            <li>Workflow optimisation for content production</li>
+            <li>Video and audio editing workflows</li>
           </ul>
         </div>
       </article>

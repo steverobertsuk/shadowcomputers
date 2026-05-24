@@ -57,13 +57,13 @@
 </head>
 <body>
   <a href="#main-content" class="skip-link">Skip to main content</a>
-  {% include "header.njk" %}
+  {% include "header.11ty.njk" %}
 
   <main id="main-content">
     {{ content | safe }}
   </main>
 
-  {% include "footer.njk" %}
+  {% include "footer.11ty.njk" %}
 
   {% if site.cfToken %}
   <!-- Cloudflare Web Analytics — cookieless, no consent required -->
@@ -71,10 +71,11 @@
     data-cf-beacon='{"token": "{{ site.cfToken }}"}'></script>
   {% endif %}
 
-  {% include "cookie-banner.njk" %}
+  {% include "cookie-banner.11ty.njk" %}
 
   {% if pageScript %}
   <script src="{{ pageScript }}" defer></script>
   {% endif %}
+  <script src="https://kit.fontawesome.com/12ee2e71a6.js" crossorigin="anonymous"></script>
 </body>
 </html>

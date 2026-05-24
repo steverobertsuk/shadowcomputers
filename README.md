@@ -5,7 +5,7 @@ Static site for [shadowcomputers.co.uk](https://shadowcomputers.co.uk), built wi
 ## Tech stack
 
 - **SSG**: Eleventy v2
-- **Templates**: Nunjucks (`.njk`)
+- **Templates**: Nunjucks (`.11ty.njk`)
 - **Fonts**: Exo 2 (headings) + Inter (body) via Google Fonts
 - **Hosting**: Cloudflare Pages
 - **Build**: GitHub Actions → Cloudflare Pages
@@ -16,17 +16,17 @@ Static site for [shadowcomputers.co.uk](https://shadowcomputers.co.uk), built wi
 shadowcomputers.co.uk/
 ├─ src/
 │  ├─ _includes/
-│  │  ├─ layout.njk       # Base HTML shell
-│  │  ├─ header.njk       # Sticky nav header
-│  │  ├─ footer.njk       # Site footer
-│  │  └─ service-card.njk # Reusable service card partial
+│  │  ├─ layout.11ty.njk       # Base HTML shell
+│  │  ├─ header.11ty.njk       # Sticky nav header
+│  │  ├─ footer.11ty.njk       # Site footer
+│  │  └─ service-card.11ty.njk # Reusable service card partial
 │  ├─ css/
 │  │  └─ site.css         # All styles — dark theme, brand palette
 │  ├─ images/             # Logo assets (passed through to _site)
-│  ├─ index.njk           # Home page
-│  ├─ about.njk           # About page
-│  ├─ services.njk        # Services page
-│  └─ contact.njk         # Contact page
+│  ├─ index.11ty.njk           # Home page
+│  ├─ about.11ty.njk           # About page
+│  ├─ services.11ty.njk        # Services page
+│  └─ contact.11ty.njk         # Contact page
 ├─ .eleventy.js           # Eleventy config
 ├─ package.json
 └─ README.md

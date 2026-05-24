@@ -36,7 +36,7 @@ shadowcomputers.co.uk/
 
 ```bash
 npm install
-npm run dev       # Serves at http://localhost:8080 with live reload
+npm run dev       # Serves at http://localhost:8081 with live reload
 ```
 
 ## Build

@@ -1,11 +1,13 @@
 {
-  "name": "shadow-computers-site",
+  "name": "shadow-computers",
   "version": "1.0.4",
   "description": "Shadow Computers website — Hosting, Web & Media Systems",
   "scripts": {
     "build": "cross-env NODE_ENV=production eleventy",
-    "start": "eleventy --serve",
-    "dev": "eleventy --serve --watch"
+    "start": "eleventy --serve --port=8081",
+    "watch": "eleventy --serve --watch --port=8081",
+    "format": "prettier --write . --ignore-unknown",
+    "format:check": "prettier --check . --ignore-unknown"
   },
   "dependencies": {
     "@11ty/eleventy": "^3.1.5"
@@ -14,6 +16,7 @@
     "node": ">=24"
   },
   "devDependencies": {
-    "cross-env": "^10.1.0"
+    "cross-env": "^10.1.0",
+    "prettier": "^3.8.3"
   }
 }

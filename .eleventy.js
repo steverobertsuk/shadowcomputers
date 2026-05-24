@@ -25,10 +25,7 @@ module.exports = function eleventyConfig(eleventyConfig) {
     name: 'Shadow Computers',
     shortName: 'ShadowComps',
     description: 'Hosting, Web & Media Systems with part-time IT Support.',
-    url:
-      process.env.NODE_ENV === 'production'
-        ? 'https://shadowcomputers.co.uk'
-        : 'http://localhost:8080',
+    url: process.env.SITE_URL || 'https://shadowcomputers.co.uk',
     themeColor: '#3B82F6',
     bgColor: '#05070F',
     // Analytics — replace placeholders before going live

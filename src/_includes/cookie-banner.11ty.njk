@@ -21,6 +21,7 @@
   'use strict';
 
   var COOKIE = 'sc_consent';
+  var LEGACY_COOKIE = 'sc_concent';
   var GA_ID  = '{{ site.gaId }}';
   var banner = document.getElementById('cookie-banner');
 
@@ -47,39 +48,56 @@
     s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
     document.head.appendChild(s);
     window.dataLayer = window.dataLayer || [];
-    window.gtag = function () { dataLayer.push(arguments); };
-    gtag('js', new Date());
-    gtag('config', GA_ID, { anonymize_ip: true });
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', GA_ID, { anonymize_ip: true });
   }
 
   // ── Banner visibility ────────────────────────────────────
   function showBanner() {
+    if (!banner) return;
     banner.removeAttribute('hidden');
-    banner.querySelector('.cookie-btn-accept').focus();
+    var acceptButton = banner.querySelector('.cookie-btn-accept');
+    if (acceptButton) acceptButton.focus();
   }
   function hideBanner() {
-    banner.setAttribute('hidden', '');
+    if (banner) {
+      banner.setAttribute('hidden', '');
+    }
   }
 
   // ── Initialise ───────────────────────────────────────────
-  var consent = getCookie(COOKIE);
+  var consent = getCookie(COOKIE) || getCookie(LEGACY_COOKIE);
+  if (consent && !getCookie(COOKIE)) {
+    setCookie(COOKIE, consent, 365);
+    removeCookie(LEGACY_COOKIE);
+  }
   if (consent === 'accepted') {
     loadGA();
   } else if (!consent) {
-    requestAnimationFrame(showBanner);
+    showBanner();
   }
 
   // ── Accept / decline ────────────────────────────────────
-  banner.querySelector('.cookie-btn-accept').addEventListener('click', function () {
-    setCookie(COOKIE, 'accepted', 365);
-    hideBanner();
-    loadGA();
-  });
+  if (banner) {
+    var acceptButton = banner.querySelector('.cookie-btn-accept');
+    var declineButton = banner.querySelector('.cookie-btn-decline');
 
-  banner.querySelector('.cookie-btn-decline').addEventListener('click', function () {
-    setCookie(COOKIE, 'declined', 365);
-    hideBanner();
-  });
+    if (acceptButton) {
+      acceptButton.addEventListener('click', function () {
+        setCookie(COOKIE, 'accepted', 365);
+        hideBanner();
+        loadGA();
+      });
+    }
+
+    if (declineButton) {
+      declineButton.addEventListener('click', function () {
+        setCookie(COOKIE, 'declined', 365);
+        hideBanner();
+      });
+    }
+  }
 
   // ── "Cookie preferences" footer link ────────────────────
   var prefLink = document.getElementById('cookie-prefs-link');
@@ -87,6 +105,7 @@
     prefLink.addEventListener('click', function (e) {
       e.preventDefault();
       removeCookie(COOKIE);
+      removeCookie(LEGACY_COOKIE);
       showBanner();
     });
   }

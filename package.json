@@ -3,9 +3,9 @@
   "version": "1.0.4",
   "description": "Shadow Computers website — Hosting, Web & Media Systems",
   "scripts": {
-    "build": "cross-env NODE_ENV=production eleventy",
+    "build": "cross-env NODE_ENV=production eleventy && node ./scripts/check-accessible-names.mjs _site",
     "start": "eleventy --serve --port=8081",
-    "watch": "eleventy --serve --watch --port=8081",
+    "watch": "node ./scripts/watch.mjs",
     "format": "prettier --write . --ignore-unknown",
     "format:check": "prettier --check . --ignore-unknown"
   },

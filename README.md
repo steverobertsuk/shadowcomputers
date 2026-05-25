@@ -48,7 +48,7 @@ npm run build     # Outputs to _site/
 ## Cloudflare Pages settings
 
 | Setting          | Value           |
-|------------------|-----------------|
+| ---------------- | --------------- |
 | Build command    | `npm run build` |
 | Output directory | `_site`         |
 | Node version     | `24`            |

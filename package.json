@@ -13,7 +13,9 @@
     "watch": "node ./scripts/watch.mjs",
     "format": "prettier --write . --ignore-unknown",
     "format:check": "prettier --check . --ignore-unknown",
-    "release:patch": "npm version patch --no-git-tag-version"
+    "release:patch": "npm version patch --no-git-tag-version",
+    "release:minor": "npm version minor --no-git-tag-version",
+    "release:major": "npm version major --no-git-tag-version"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",

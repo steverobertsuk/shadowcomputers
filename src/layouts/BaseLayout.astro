@@ -1,0 +1,233 @@
+---
+import '../styles/global.css';
+import CookieBanner from '../components/CookieBanner.astro';
+import pkg from '../../package.json';
+import { GA_ID, CF_BEACON_TOKEN } from '../config';
+
+const siteName = 'Shadow Computers';
+const siteDescription = 'Hosting, Web & Media Systems with part-time IT Support.';
+const themeColor = '#3B82F6';
+
+const { title = '', description = siteDescription, pageScript = '' } = Astro.props;
+
+const pageTitle = title ? `${title} | ${siteName}` : siteName;
+const siteBase = Astro.site ?? 'https://shadowcomputers.co.uk';
+const canonical = new URL(Astro.url.pathname, siteBase).href;
+const imageAlt = `${siteName} — ${siteDescription}`;
+
+// Slug mirrors the derivation in scripts/generate-og-images.mjs
+const pageSlug =
+  Astro.url.pathname.replace(/^\/|\/$/g, '').replace(/\//g, '-') || 'default';
+const ogImage = new URL(`/assets/og/${pageSlug}.png`, siteBase).href;
+const gaId = GA_ID;
+const cfToken = CF_BEACON_TOKEN;
+const pathname = Astro.url.pathname;
+const isActive = (href: string) => pathname === href;
+
+const navItems = [
+  { label: 'Home', url: '/', icon: 'fa-solid fa-house' },
+  { label: 'Services', url: '/services/', icon: 'fa-solid fa-screwdriver-wrench' },
+  { label: 'About', url: '/about/', icon: 'fa-solid fa-circle-info' },
+  { label: 'Contact', url: '/contact/', icon: 'fa-solid fa-envelope' },
+];
+
+const fontsHref =
+  'https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="Steve Roberts" />
+    <meta name="version" content={pkg.version} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Favicon & icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/icon-16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/icon-32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/images/icon-48.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icon-180.png" />
+
+    <!-- Web app manifest -->
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content={themeColor} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
+
+    <!-- Twitter / X card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+
+    <!-- Fonts: Exo 2 (headings) + Inter (body) — loaded async to avoid render-blocking -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href={fontsHref} />
+    <link
+      rel="stylesheet"
+      href={fontsHref}
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link rel="stylesheet" href={fontsHref} />
+    </noscript>
+
+    <link rel="preconnect" href="https://kit.fontawesome.com" crossorigin />
+    <link rel="preconnect" href="https://ka-p.fontawesome.com" crossorigin />
+    <script
+      is:inline
+      src="https://kit.fontawesome.com/12ee2e71a6.js"
+      crossorigin="anonymous"
+      data-cfasync="false"></script>
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="site-header" role="banner">
+      <div class="header-inner">
+        <a href="/" class="logo-link" aria-label="Shadow Computers — Home">
+          <img
+            src="/images/shadow-computers-logo.png"
+            alt="Shadow Computers"
+            class="logo-img"
+            width="264"
+            height="100"
+          />
+        </a>
+
+        <button
+          class="nav-toggle"
+          aria-expanded="false"
+          aria-controls="primary-nav"
+          aria-label="Open navigation menu"
+        >
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+        </button>
+
+        <nav id="primary-nav" class="primary-nav" aria-label="Primary navigation">
+          <ul class="nav-list" role="list">
+            {
+              navItems.map((item) => (
+                <li>
+                  <a
+                    href={item.url}
+                    class={`nav-link ${isActive(item.url) ? 'active' : ''}`.trim()}
+                    aria-current={isActive(item.url) ? 'page' : undefined}
+                  >
+                    <i class={item.icon} aria-hidden="true" /> {item.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <script is:inline>
+      (function () {
+        const toggle = document.querySelector('.nav-toggle');
+        const nav = document.querySelector('.primary-nav');
+        if (toggle && nav) {
+          toggle.addEventListener('click', function () {
+            const open = this.getAttribute('aria-expanded') === 'true';
+            this.setAttribute('aria-expanded', String(!open));
+            nav.classList.toggle('is-open', !open);
+          });
+        }
+      })();
+    </script>
+
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <a href="/" aria-label="Shadow Computers — Home">
+            <img
+              src="/images/shadow-computers-logo-icon.png"
+              alt="Shadow Computers icon"
+              class="footer-logo-icon"
+              width="100"
+              height="100"
+            />
+          </a>
+          <p class="footer-tagline">
+            Shadow Computers<br /><span
+              >Hosting &ndash; Email &ndash; Websites &ndash; Support</span
+            >
+          </p>
+        </div>
+
+        <nav class="footer-nav" aria-label="Footer navigation">
+          <ul role="list">
+            <li><a href="/">Home</a></li>
+            <li><a href="/services/">Services</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="/contact/">Contact</a></li>
+          </ul>
+        </nav>
+
+        <div class="footer-social">
+          <p class="footer-label">Steve Roberts</p>
+          <a
+            href="https://steveroberts.me"
+            class="footer-ext-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            steveroberts.me <i
+              class="fa-solid fa-arrow-up-right-from-square"
+              aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>
+          &copy; {new Date().getFullYear()} Shadow Computers. Trading name of Steve Roberts.
+          &nbsp;&middot;&nbsp; <a href="/privacy/">Privacy Policy</a>
+          {gaId && <>&nbsp;&middot;&nbsp; <a href="#" id="cookie-prefs-link">Cookie Preferences</a></>}
+        </p>
+      </div>
+    </footer>
+
+    {
+      cfToken && (
+        <script
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={`{"token": "${cfToken}"}`}
+        />
+      )
+    }
+
+    {gaId && <CookieBanner gaId={gaId} />}
+
+    {pageScript && <script is:inline src={pageScript} defer></script>}
+  </body>
+</html>

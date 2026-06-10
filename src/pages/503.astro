@@ -1,0 +1,21 @@
+---
+import ErrorLayout from '../layouts/ErrorLayout.astro';
+---
+
+<ErrorLayout
+  errorCode={"503"}
+  errorTitle={"Service Unavailable"}
+  errorDesc={"The site is temporarily unavailable. Please try again shortly."}
+>
+<section class="error-page" aria-labelledby="error-title">
+  <div class="container">
+    <p class="error-code" aria-hidden="true">503</p>
+    <h1 class="error-title" id="error-title">Service Unavailable</h1>
+    <p class="error-desc">
+      The site is temporarily down for maintenance or is experiencing unusually
+      high traffic. Please try again in a few minutes.
+    </p>
+    <a href="https://shadowcomputers.co.uk/" class="btn-primary">Try Again</a>
+  </div>
+</section>
+</ErrorLayout>

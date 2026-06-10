@@ -1,0 +1,22 @@
+---
+import ErrorLayout from '../layouts/ErrorLayout.astro';
+---
+
+<ErrorLayout
+  errorTitle={"Security Challenge"}
+  errorDesc={"Complete the security check to continue to the site."}
+>
+<section class="error-page" aria-labelledby="error-title">
+  <div class="container">
+    <h1 class="error-title" id="error-title">Security Check</h1>
+    <p class="error-desc">
+      This site is protected against automated traffic. Complete the security
+      check below and you'll be on your way.
+    </p>
+    <!-- Cloudflare replaces this token with the challenge widget when this
+         page is served from the zone's Managed Challenge / Interactive
+         Challenge / Country Challenge custom page slots. -->
+    <div class="cf-error-details">::CAPTCHA_BOX::</div>
+  </div>
+</section>
+</ErrorLayout>

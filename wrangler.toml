@@ -1,0 +1,3 @@
+name = "shadowcomputers"
+pages_build_output_dir = "dist/client"
+compatibility_date = "2026-05-23"

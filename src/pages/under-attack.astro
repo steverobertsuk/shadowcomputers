@@ -1,0 +1,22 @@
+---
+import ErrorLayout from '../layouts/ErrorLayout.astro';
+---
+
+<ErrorLayout
+  errorTitle={"Checking Your Browser"}
+  errorDesc={"Your browser is being checked before you continue to the site."}
+>
+<section class="error-page" aria-labelledby="error-title">
+  <div class="container">
+    <h1 class="error-title" id="error-title">Checking Your Browser</h1>
+    <p class="error-desc">
+      This site is under heightened protection. The check completes
+      automatically within a few seconds — no action is needed.
+    </p>
+    <!-- Cloudflare replaces this token with the browser check widget when
+         this page is served from the zone's Non-Interactive Challenge
+         custom page slot. -->
+    <div class="cf-error-details">::IM_UNDER_ATTACK_BOX::</div>
+  </div>
+</section>
+</ErrorLayout>

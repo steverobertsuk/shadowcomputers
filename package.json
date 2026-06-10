@@ -1,22 +1,41 @@
 {
   "name": "shadow-computers",
-  "version": "1.0.4",
+  "version": "1.1.0",
+  "type": "module",
+  "private": true,
   "description": "Shadow Computers website — Hosting, Web & Media Systems",
   "scripts": {
-    "build": "cross-env NODE_ENV=production eleventy && node ./scripts/check-accessible-names.mjs _site",
-    "start": "eleventy --serve --port=8081",
+    "dev": "astro dev",
+    "build": "astro check && astro build && node --use-system-ca ./scripts/generate-og-images.mjs dist && node ./scripts/copy-error-pages.mjs dist && node -e \"const fs=require('fs');['.wrangler/deploy/config.json','dist/client/wrangler.json'].forEach(p=>{try{fs.unlinkSync(p)}catch(_){}})\"",
+    "build:local": "npm run build && node ./scripts/check-accessible-names.mjs dist",
+    "og:generate": "astro build && node --use-system-ca ./scripts/generate-og-images.mjs --force dist",
+    "preview": "astro preview",
     "watch": "node ./scripts/watch.mjs",
     "format": "prettier --write . --ignore-unknown",
-    "format:check": "prettier --check . --ignore-unknown"
+    "format:check": "prettier --check . --ignore-unknown",
+    "release:patch": "npm version patch --no-git-tag-version"
   },
   "dependencies": {
-    "@11ty/eleventy": "3.1.5"
+    "@astrojs/check": "^0.9.9",
+    "@astrojs/cloudflare": "^13.6.1",
+    "@astrojs/mdx": "^6.0.2",
+    "@resvg/resvg-wasm": "^2.6.2",
+    "astro": "^6.4.5",
+    "satori": "^0.26.0",
+    "typescript": "^6.0.3"
+  },
+  "overrides": {
+    "yaml-language-server": {
+      "yaml": "^2.9.0"
+    }
   },
   "engines": {
     "node": ">=24"
   },
   "devDependencies": {
-    "cross-env": "^10.1.0",
-    "prettier": "^3.8.3"
+    "@types/node": "^25.9.2",
+    "prettier": "^3.8.3",
+    "prettier-plugin-astro": "^0.14.1",
+    "sharp": "^0.34.5"
   }
 }

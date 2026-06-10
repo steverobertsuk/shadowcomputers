@@ -6,23 +6,33 @@ import { fileURLToPath } from "node:url";
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(scriptDir, "..");
 const isWindows = process.platform === "win32";
-const ignoredSegments = new Set([".git", "node_modules", "_site"]);
-const checkScript = resolve(scriptDir, "check-accessible-names.mjs");
+const astroCli = resolve(
+  projectRoot,
+  "node_modules",
+  "astro",
+  "bin",
+  "astro.mjs",
+);
+const spawnOptions = {
+  cwd: projectRoot,
+  stdio: "inherit",
+};
+const ogScript = resolve(scriptDir, "generate-og-images.mjs");
+const accessibleNameCheckScript = resolve(
+  scriptDir,
+  "check-accessible-names.mjs",
+);
+const ignoredSegments = new Set([".astro", "dist", "node_modules", ".git"]);
+const enableBackgroundBuild = process.env.ASTRO_BACKGROUND_BUILD === "1";
 
-let checkRunning = false;
-let checkQueued = false;
-let checkTimer = null;
+let buildProcess = null;
+let buildQueued = false;
+let buildTimer = null;
 let shuttingDown = false;
 
-const serveProcess = spawn(
-  "npx",
-  ["eleventy", "--serve", "--watch", "--port=8081"],
-  {
-    cwd: projectRoot,
-    stdio: "inherit",
-    shell: isWindows,
-  },
-);
+function runAstroCommand(...args) {
+  return spawn(process.execPath, [astroCli, ...args], spawnOptions);
+}
 
 function stopProcess(childProcess) {
   if (!childProcess || childProcess.killed) {
@@ -41,6 +51,8 @@ function stopProcess(childProcess) {
   childProcess.kill("SIGTERM");
 }
 
+const devProcess = runAstroCommand("dev");
+
 function isIgnoredPath(changedPath) {
   const normalizedPath = changedPath.replace(/\\/g, "/");
   return normalizedPath
@@ -48,96 +60,150 @@ function isIgnoredPath(changedPath) {
     .some((segment) => ignoredSegments.has(segment));
 }
 
-function runAudit() {
-  if (shuttingDown || checkRunning) {
-    return;
-  }
+function runBuildStep(args) {
+  return new Promise((resolveBuild, rejectBuild) => {
+    const childProcess = runAstroCommand(...args);
 
-  checkRunning = true;
+    childProcess.on("error", rejectBuild);
+    childProcess.on("exit", (code) => {
+      if (code === 0) {
+        resolveBuild();
+        return;
+      }
 
-  const auditProcess = spawn(process.execPath, [checkScript, "_site"], {
-    cwd: projectRoot,
-    stdio: "inherit",
-  });
-
-  auditProcess.on("error", (error) => {
-    console.error(error.message);
-  });
-
-  auditProcess.on("exit", (code) => {
-    checkRunning = false;
-
-    if (code !== 0) {
-      console.error(`Accessible-name audit exited with code ${code}.`);
-    }
-
-    if (checkQueued && !shuttingDown) {
-      checkQueued = false;
-      runAudit();
-    }
+      rejectBuild(
+        new Error(`Astro ${args.join(" ")} exited with code ${code}.`),
+      );
+    });
   });
 }
 
-function queueAudit(reason) {
+function runScript(scriptPath, args = []) {
+  return new Promise((resolveStep, rejectStep) => {
+    const childProcess = spawn(
+      process.execPath,
+      ["--use-system-ca", scriptPath, ...args],
+      spawnOptions,
+    );
+    childProcess.on("error", rejectStep);
+    childProcess.on("exit", (code) => {
+      if (code === 0) {
+        resolveStep();
+        return;
+      }
+      rejectStep(new Error(`${scriptPath} exited with code ${code}.`));
+    });
+  });
+}
+
+function runOgImages() {
+  return runScript(ogScript, ["dist"]);
+}
+
+function runAccessibleNameAudit() {
+  return runScript(accessibleNameCheckScript, ["dist"]);
+}
+
+function startBuild() {
+  if (shuttingDown || buildProcess) {
+    return;
+  }
+
+  buildProcess = { cancelled: false };
+
+  Promise.resolve()
+    .then(() => runBuildStep(["check"]))
+    .then(() => runBuildStep(["build"]))
+    .then(() => runOgImages())
+    .then(() => runAccessibleNameAudit())
+    .catch((error) => {
+      if (!buildProcess?.cancelled) {
+        console.error(error.message);
+      }
+    })
+    .finally(() => {
+      buildProcess = null;
+
+      if (buildQueued && !shuttingDown) {
+        buildQueued = false;
+        startBuild();
+      }
+    });
+}
+
+function queueBuild(reason) {
   if (shuttingDown) {
     return;
   }
 
-  clearTimeout(checkTimer);
-  checkTimer = setTimeout(() => {
-    if (checkRunning) {
-      checkQueued = true;
+  clearTimeout(buildTimer);
+  buildTimer = setTimeout(() => {
+    if (buildProcess) {
+      buildQueued = true;
       return;
     }
 
-    console.log(`Change detected (${reason}); running accessible-name audit...`);
-    runAudit();
-  }, 350);
+    console.log(`Change detected (${reason}); rebuilding site output...`);
+    startBuild();
+  }, 250);
 }
 
-const watcher = watch(
-  resolve(projectRoot, "src"),
-  { recursive: true },
-  (eventType, filename) => {
-    if (!filename || isIgnoredPath(filename)) {
-      return;
-    }
+const watcher = enableBackgroundBuild
+  ? watch(
+      projectRoot,
+      { recursive: true },
+      (eventType, filename) => {
+        if (!filename || isIgnoredPath(filename)) {
+          return;
+        }
 
-    queueAudit(`${eventType}: ${filename}`);
-  },
-);
+        queueBuild(`${eventType}: ${filename}`);
+      },
+    )
+  : null;
 
-setTimeout(() => {
-  if (!shuttingDown) {
-    console.log("Running initial accessible-name audit...");
-    runAudit();
-  }
-}, 1000);
-
-function shutdown() {
+function shutdown(signal) {
   if (shuttingDown) {
     return;
   }
 
   shuttingDown = true;
-  clearTimeout(checkTimer);
-  watcher.close();
-  stopProcess(serveProcess);
+  clearTimeout(buildTimer);
+  watcher?.close();
+
+  if (buildProcess) {
+    buildProcess.cancelled = true;
+  }
+
+  stopProcess(devProcess, signal);
 }
 
-for (const signal of ["SIGINT", "SIGTERM"]) {
-  process.on(signal, shutdown);
-}
-
-serveProcess.on("exit", (code) => {
+devProcess.on("exit", (code) => {
   shuttingDown = true;
-  clearTimeout(checkTimer);
-  watcher.close();
+  watcher?.close();
+  clearTimeout(buildTimer);
+
+  if (buildProcess) {
+    buildProcess.cancelled = true;
+  }
+
   process.exit(code ?? 0);
 });
 
-serveProcess.on("error", (error) => {
+devProcess.on("error", (error) => {
   console.error(error.message);
-  shutdown();
+  shutdown("SIGTERM");
   process.exit(1);
 });
+
+process.on("SIGINT", () => shutdown("SIGINT"));
+process.on("SIGTERM", () => shutdown("SIGTERM"));
+
+if (enableBackgroundBuild) {
+  console.log(
+    "Background check/build enabled (ASTRO_BACKGROUND_BUILD=1).",
+  );
+  startBuild();
+} else {
+  console.log("Background check/build disabled for stable dev routing.");
+}

@@ -1,12 +1,13 @@
 # Dependencies
 node_modules/
 
-# Build output (Eleventy default)
-_site/
+# Build output (Astro)
+dist/
+.astro/
+.wrangler/
 
-# Cache (Eleventy)
+# Cache
 .cache/
-.eleventy.js.tmp
 
 # Environment variables
 .env

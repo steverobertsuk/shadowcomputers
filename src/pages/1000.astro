@@ -1,0 +1,24 @@
+---
+import ErrorLayout from '../layouts/ErrorLayout.astro';
+---
+
+<ErrorLayout
+  errorCode={"1XXX"}
+  errorTitle={"Connection Error"}
+  errorDesc={"Cloudflare could not reach this site. Please try again in a few minutes."}
+>
+<section class="error-page" aria-labelledby="error-title">
+  <div class="container">
+    <p class="error-code" aria-hidden="true">1XXX</p>
+    <h1 class="error-title" id="error-title">Connection Error</h1>
+    <p class="error-desc">
+      Something went wrong between Cloudflare and this site. The details below
+      explain what happened — please try again in a few minutes.
+    </p>
+    <!-- Cloudflare replaces this token with its diagnostic box when this page
+         is served from the zone's "1XXX Errors" custom error page slot. -->
+    <div class="cf-error-details">::CLOUDFLARE_ERROR_1000S_BOX::</div>
+    <a href="https://shadowcomputers.co.uk/" class="btn-primary">Return to Homepage</a>
+  </div>
+</section>
+</ErrorLayout>

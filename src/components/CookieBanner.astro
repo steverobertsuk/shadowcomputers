@@ -1,0 +1,121 @@
+---
+interface Props {
+  gaId: string;
+}
+
+const { gaId } = Astro.props as Props;
+---
+
+<div
+  class="cookie-banner"
+  id="cookie-banner"
+  role="region"
+  aria-label="Cookie consent"
+  data-ga-id={gaId}
+  hidden
+>
+  <div class="cookie-banner-inner">
+    <div class="cookie-banner-body">
+      <p class="cookie-banner-title">Cookie preferences</p>
+      <p class="cookie-banner-text">
+        We&rsquo;d like to use <strong>Google Analytics</strong> to understand how
+        visitors use this site &mdash; no advertising or profiling involved.
+        <a href="/privacy/#cookies">Read our cookie policy</a>
+      </p>
+    </div>
+    <div class="cookie-banner-actions">
+      <button class="btn-primary cookie-btn-accept" type="button"
+        >Accept analytics</button
+      >
+      <button class="btn-secondary cookie-btn-decline" type="button"
+        >Decline</button
+      >
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (() => {
+    const COOKIE = 'sc_consent';
+    const LEGACY_COOKIE = 'sc_concent';
+    const banner = document.getElementById('cookie-banner');
+    const GA_ID = banner?.dataset.gaId ?? '';
+
+    const getCookie = (name) => {
+      const match = document.cookie.match(
+        new RegExp('(?:^|; )' + name + '=([^;]*)'),
+      );
+      return match ? decodeURIComponent(match[1]) : null;
+    };
+
+    const setCookie = (name, value, days) => {
+      const expires = new Date(Date.now() + days * 864e5).toUTCString();
+      document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax`;
+    };
+
+    const removeCookie = (name) => {
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+    };
+
+    const loadAnalytics = () => {
+      if (!GA_ID || window._gaLoaded) return;
+
+      window._gaLoaded = true;
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+      document.head.appendChild(script);
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () {
+        window.dataLayer.push(arguments);
+      };
+      window.gtag('js', new Date());
+      window.gtag('config', GA_ID, { anonymize_ip: true });
+    };
+
+    const showBanner = () => {
+      if (!banner) return;
+      banner.removeAttribute('hidden');
+      banner.querySelector('.cookie-btn-accept')?.focus();
+    };
+
+    const hideBanner = () => {
+      banner?.setAttribute('hidden', '');
+    };
+
+    const consent = getCookie(COOKIE) || getCookie(LEGACY_COOKIE);
+    if (consent && !getCookie(COOKIE)) {
+      setCookie(COOKIE, consent, 365);
+      removeCookie(LEGACY_COOKIE);
+    }
+    if (consent === 'accepted') {
+      loadAnalytics();
+    } else if (!consent) {
+      showBanner();
+    }
+
+    banner
+      ?.querySelector('.cookie-btn-accept')
+      ?.addEventListener('click', () => {
+        setCookie(COOKIE, 'accepted', 365);
+        hideBanner();
+        loadAnalytics();
+      });
+
+    banner
+      ?.querySelector('.cookie-btn-decline')
+      ?.addEventListener('click', () => {
+        setCookie(COOKIE, 'declined', 365);
+        hideBanner();
+      });
+
+    document
+      .getElementById('cookie-prefs-link')
+      ?.addEventListener('click', (event) => {
+        event.preventDefault();
+        removeCookie(COOKIE);
+        removeCookie(LEGACY_COOKIE);
+        showBanner();
+      });
+  })();
+</script>

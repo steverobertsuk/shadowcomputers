@@ -1,0 +1,143 @@
+---
+import '../styles/global.css';
+
+const siteName = 'Shadow Computers';
+const themeColor = '#3B82F6';
+
+const { errorCode, errorTitle, errorDesc } = Astro.props;
+
+// Error pages can be served by Cloudflare from any URL, so every asset and
+// link uses an absolute URL (mirrors the old Eleventy error-layout).
+const siteUrl = (Astro.site ?? new URL('https://shadowcomputers.co.uk')).href.replace(/\/$/, '');
+
+const fontsHref =
+  'https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+
+    <title>{[errorCode, errorTitle].filter(Boolean).join(' ')} | {siteName}</title>
+    <meta name="description" content={errorDesc} />
+
+    <!-- Favicon & icons (absolute paths) -->
+    <link rel="icon" type="image/x-icon" href={`${siteUrl}/favicon.ico`} />
+    <link rel="icon" type="image/png" sizes="16x16" href={`${siteUrl}/images/icon-16.png`} />
+    <link rel="icon" type="image/png" sizes="32x32" href={`${siteUrl}/images/icon-32.png`} />
+    <link rel="icon" type="image/png" sizes="48x48" href={`${siteUrl}/images/icon-48.png`} />
+    <link rel="apple-touch-icon" sizes="180x180" href={`${siteUrl}/images/icon-180.png`} />
+    <link rel="manifest" href={`${siteUrl}/site.webmanifest`} />
+    <meta name="theme-color" content={themeColor} />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href={fontsHref} rel="stylesheet" />
+  </head>
+  <body>
+    <header class="site-header" role="banner">
+      <div class="header-inner">
+        <a href={`${siteUrl}/`} class="logo-link" aria-label="Shadow Computers — Home">
+          <img
+            src={`${siteUrl}/images/shadow-computers-logo.png`}
+            alt="Shadow Computers"
+            class="logo-img"
+            width="264"
+            height="100"
+          />
+        </a>
+
+        <button
+          class="nav-toggle"
+          aria-expanded="false"
+          aria-controls="primary-nav"
+          aria-label="Open navigation menu"
+        >
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+        </button>
+
+        <nav id="primary-nav" class="primary-nav" aria-label="Primary navigation">
+          <ul class="nav-list" role="list">
+            <li><a href={`${siteUrl}/`} class="nav-link">Home</a></li>
+            <li><a href={`${siteUrl}/services/`} class="nav-link">Services</a></li>
+            <li><a href={`${siteUrl}/about/`} class="nav-link">About</a></li>
+            <li><a href={`${siteUrl}/contact/`} class="nav-link">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <script is:inline>
+      (function () {
+        var toggle = document.querySelector('.nav-toggle');
+        var nav = document.querySelector('.primary-nav');
+        if (toggle && nav) {
+          toggle.addEventListener('click', function () {
+            var open = this.getAttribute('aria-expanded') === 'true';
+            this.setAttribute('aria-expanded', String(!open));
+            nav.classList.toggle('is-open', !open);
+          });
+        }
+      })();
+    </script>
+
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <a href={`${siteUrl}/`} aria-label="Shadow Computers — Home">
+            <img
+              src={`${siteUrl}/images/shadow-computers-logo-icon.png`}
+              alt="Shadow Computers icon"
+              class="footer-logo-icon"
+              width="100"
+              height="100"
+            />
+          </a>
+          <p class="footer-tagline">
+            Shadow Computers<br /><span
+              >Hosting &ndash; Email &ndash; Websites &ndash; Support</span
+            >
+          </p>
+        </div>
+
+        <nav class="footer-nav" aria-label="Footer navigation">
+          <ul role="list">
+            <li><a href={`${siteUrl}/`}>Home</a></li>
+            <li><a href={`${siteUrl}/services/`}>Services</a></li>
+            <li><a href={`${siteUrl}/about/`}>About</a></li>
+            <li><a href={`${siteUrl}/contact/`}>Contact</a></li>
+          </ul>
+        </nav>
+
+        <div class="footer-social">
+          <p class="footer-label">Steve Roberts</p>
+          <a
+            href="https://steveroberts.me"
+            class="footer-ext-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            steveroberts.me ↗
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>
+          &copy; {new Date().getFullYear()} Shadow Computers. Trading name of Steve
+          Roberts. &nbsp;&middot;&nbsp; <a href={`${siteUrl}/privacy/`}>Privacy Policy</a>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

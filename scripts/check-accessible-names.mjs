@@ -3,7 +3,9 @@ import { resolve } from "node:path";
 
 const rootArg = process.argv[2];
 if (!rootArg) {
-  console.error("Usage: node scripts/check-accessible-names.mjs <html-output-dir>");
+  console.error(
+    "Usage: node scripts/check-accessible-names.mjs <html-output-dir>",
+  );
   process.exit(2);
 }
 
@@ -33,8 +35,10 @@ function isHiddenAttrs(attrs) {
 
 function removeHiddenSubtrees(input) {
   let output = input;
-  const hiddenBlockRegex = /<([a-z][a-z0-9:-]*)\b([^>]*?(?:\shidden(?:\s|>|=|$)|\baria-hidden\s*=\s*(["'])\s*true\s*\3)[^>]*)>[\s\S]*?<\/\1>/gi;
-  const hiddenSelfClosingRegex = /<([a-z][a-z0-9:-]*)\b([^>]*?(?:\shidden(?:\s|>|=|$)|\baria-hidden\s*=\s*(["'])\s*true\s*\3)[^>]*)\/?>/gi;
+  const hiddenBlockRegex =
+    /<([a-z][a-z0-9:-]*)\b([^>]*?(?:\shidden(?:\s|>|=|$)|\baria-hidden\s*=\s*(["'])\s*true\s*\3)[^>]*)>[\s\S]*?<\/\1>/gi;
+  const hiddenSelfClosingRegex =
+    /<([a-z][a-z0-9:-]*)\b([^>]*?(?:\shidden(?:\s|>|=|$)|\baria-hidden\s*=\s*(["'])\s*true\s*\3)[^>]*)\/?>/gi;
 
   while (hiddenBlockRegex.test(output)) {
     output = output.replace(hiddenBlockRegex, " ");
@@ -66,7 +70,8 @@ function hasNamedImg(innerHtml) {
 
 function hasNamedSvgTitle(innerHtml) {
   const visibleInnerHtml = removeHiddenSubtrees(innerHtml);
-  const regex = /<svg\b([^>]*)>[\s\S]*?<title\b[^>]*>\s*([^<\s][\s\S]*?)\s*<\/title>[\s\S]*?<\/svg>/gi;
+  const regex =
+    /<svg\b([^>]*)>[\s\S]*?<title\b[^>]*>\s*([^<\s][\s\S]*?)\s*<\/title>[\s\S]*?<\/svg>/gi;
   for (const match of visibleInnerHtml.matchAll(regex)) {
     if (isHiddenAttrs(match[1] ?? "")) {
       continue;
@@ -161,9 +166,13 @@ async function main() {
     return;
   }
 
-  console.error("Accessible-name audit failed. Headings and anchors must have an accessible name.");
+  console.error(
+    "Accessible-name audit failed. Headings and anchors must have an accessible name.",
+  );
   for (const item of violations) {
-    console.error(`${item.filePath}:${item.line} <${item.tag}> ${item.snippet}`);
+    console.error(
+      `${item.filePath}:${item.line} <${item.tag}> ${item.snippet}`,
+    );
   }
   process.exit(1);
 }

@@ -10,4 +10,4 @@
 //
 // The GA Measurement ID is not a secret (it appears in plain text in every page's HTML),
 // so hardcoding it here is safe and correct.
-export const GA_ID = 'G-115YNQWJYF';
+export const GA_ID = "G-115YNQWJYF";

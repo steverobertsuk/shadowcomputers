@@ -48,16 +48,20 @@ function extractMeta(html, property) {
   const re = new RegExp(
     `<meta[^>]+property="${property}"[^>]+content="([^"]*)"` +
       `|<meta[^>]+content="([^"]*)"[^>]+property="${property}"`,
-    "i"
+    "i",
   );
   const m = html.match(re);
-  return (m?.[1] ?? m?.[2] ?? "").replace(/&amp;/g, "&").replace(/&#039;/g, "'");
+  return (m?.[1] ?? m?.[2] ?? "")
+    .replace(/&amp;/g, "&")
+    .replace(/&#039;/g, "'");
 }
 
 /** Convert a file path inside clientDir to the same slug BaseLayout uses. */
 function pathToSlug(htmlPath) {
   const rel = relative(clientDir, htmlPath).replace(/\\/g, "/");
-  const withoutIndex = rel.replace(/(?:^|\/)index\.html$/, "").replace(/\.html$/, "");
+  const withoutIndex = rel
+    .replace(/(?:^|\/)index\.html$/, "")
+    .replace(/\.html$/, "");
   if (!withoutIndex) return "default";
   return withoutIndex.replace(/\//g, "-");
 }
@@ -77,10 +81,12 @@ async function* findHtml(dir) {
 async function loadGoogleFont(family, weight) {
   const css = await fetch(
     `https://fonts.googleapis.com/css2?family=${encodeURIComponent(family)}:wght@${weight}&display=swap`,
-    { headers: { "User-Agent": "Mozilla/5.0 (compatible; OGBot/1.0)" } }
+    { headers: { "User-Agent": "Mozilla/5.0 (compatible; OGBot/1.0)" } },
   ).then((r) => r.text());
 
-  const match = css.match(/src:\s*url\(([^)]+)\)\s+format\('(?:truetype|opentype|woff2)'\)/);
+  const match = css.match(
+    /src:\s*url\(([^)]+)\)\s+format\('(?:truetype|opentype|woff2)'\)/,
+  );
   if (!match?.[1]) throw new Error(`No font URL found for ${family} ${weight}`);
   return fetch(match[1]).then((r) => r.arrayBuffer());
 }
@@ -90,20 +96,31 @@ async function loadGoogleFont(family, weight) {
 // ---------------------------------------------------------------------------
 function el(type, props, ...children) {
   const resolvedChildren =
-    children.length === 0 ? undefined
-    : children.length === 1 ? children[0]
-    : children;
+    children.length === 0
+      ? undefined
+      : children.length === 1
+        ? children[0]
+        : children;
   return {
     type,
     key: null,
-    props: resolvedChildren !== undefined ? { ...props, children: resolvedChildren } : props,
+    props:
+      resolvedChildren !== undefined
+        ? { ...props, children: resolvedChildren }
+        : props,
   };
 }
 
 // ---------------------------------------------------------------------------
 // OG image generation
 // ---------------------------------------------------------------------------
-async function generateOgImage({ title, description, logoDataUrl, headingFont, bodyFont }) {
+async function generateOgImage({
+  title,
+  description,
+  logoDataUrl,
+  headingFont,
+  bodyFont,
+}) {
   const textChildren = [
     el(
       "div",
@@ -116,7 +133,7 @@ async function generateOgImage({ title, description, logoDataUrl, headingFont, b
           lineHeight: 1.15,
         },
       },
-      title
+      title,
     ),
   ];
 
@@ -134,8 +151,8 @@ async function generateOgImage({ title, description, logoDataUrl, headingFont, b
             marginTop: "24px",
           },
         },
-        description
-      )
+        description,
+      ),
     );
   }
 
@@ -158,7 +175,8 @@ async function generateOgImage({ title, description, logoDataUrl, headingFont, b
         left: "0px",
         width: "1200px",
         height: "630px",
-        background: "linear-gradient(135deg, #05070F 0%, #0A101F 55%, #101A33 100%)",
+        background:
+          "linear-gradient(135deg, #05070F 0%, #0A101F 55%, #101A33 100%)",
       },
     }),
     // Accent glow toward the right where the logo sits
@@ -203,7 +221,7 @@ async function generateOgImage({ title, description, logoDataUrl, headingFont, b
             paddingLeft: "80px",
           },
         },
-        ...textChildren
+        ...textChildren,
       ),
       // Right 27%: logo, centred
       el(
@@ -224,9 +242,9 @@ async function generateOgImage({ title, description, logoDataUrl, headingFont, b
             height: "290px",
             objectFit: "contain",
           },
-        })
-      )
-    )
+        }),
+      ),
+    ),
   );
 
   const svg = await satori(node, {
@@ -238,7 +256,9 @@ async function generateOgImage({ title, description, logoDataUrl, headingFont, b
     ],
   });
 
-  return new Resvg(svg, { fitTo: { mode: "width", value: 1200 } }).render().asPng();
+  return new Resvg(svg, { fitTo: { mode: "width", value: 1200 } })
+    .render()
+    .asPng();
 }
 
 // ---------------------------------------------------------------------------
@@ -256,7 +276,7 @@ const [headingFont, bodyFont] = await Promise.all([
 ]);
 
 const logoBuffer = readFileSync(
-  join(clientDir, "images/shadow-computers-logo-icon.png")
+  join(clientDir, "images/shadow-computers-logo-icon.png"),
 );
 const logoDataUrl = await toPngDataUrl(logoBuffer);
 
@@ -284,7 +304,13 @@ for (const htmlFile of htmlFiles) {
     const rawTitle = extractMeta(html, "og:title") || "Shadow Computers";
     const title = rawTitle.replace(/\s*\|.*$/, "").trim() || rawTitle;
     const description = extractMeta(html, "og:description") || undefined;
-    const png = await generateOgImage({ title, description, logoDataUrl, headingFont, bodyFont });
+    const png = await generateOgImage({
+      title,
+      description,
+      logoDataUrl,
+      headingFont,
+      bodyFont,
+    });
     writeFileSync(publicOut, png);
     writeFileSync(distOut, png);
     generated++;
@@ -306,7 +332,9 @@ const summary = [
   generated > 0 && `${generated} generated`,
   skipped > 0 && `${skipped} skipped`,
   failed > 0 && `${failed} failed`,
-].filter(Boolean).join(", ");
+]
+  .filter(Boolean)
+  .join(", ");
 console.log(`OG images: ${summary || "nothing to do"}.`);
 
 if (unverified.length > 0) {

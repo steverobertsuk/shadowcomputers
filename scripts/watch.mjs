@@ -149,17 +149,13 @@ function queueBuild(reason) {
 }
 
 const watcher = enableBackgroundBuild
-  ? watch(
-      projectRoot,
-      { recursive: true },
-      (eventType, filename) => {
-        if (!filename || isIgnoredPath(filename)) {
-          return;
-        }
+  ? watch(projectRoot, { recursive: true }, (eventType, filename) => {
+      if (!filename || isIgnoredPath(filename)) {
+        return;
+      }
 
-        queueBuild(`${eventType}: ${filename}`);
-      },
-    )
+      queueBuild(`${eventType}: ${filename}`);
+    })
   : null;
 
 function shutdown(signal) {
@@ -200,9 +196,7 @@ process.on("SIGINT", () => shutdown("SIGINT"));
 process.on("SIGTERM", () => shutdown("SIGTERM"));
 
 if (enableBackgroundBuild) {
-  console.log(
-    "Background check/build enabled (ASTRO_BACKGROUND_BUILD=1).",
-  );
+  console.log("Background check/build enabled (ASTRO_BACKGROUND_BUILD=1).");
   startBuild();
 } else {
   console.log("Background check/build disabled for stable dev routing.");

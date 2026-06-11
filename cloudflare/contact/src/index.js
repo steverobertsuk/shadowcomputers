@@ -13,7 +13,7 @@ function buildRawEmail(from, to, replyTo, subject, body) {
     `From: Shadow Computers Contact Form <${from}>`,
     `To: <${to}>`,
     `Reply-To: ${replyTo}`,
-    `Subject: [Contact Form] ${subject}`,
+    `Subject: ${subject}`,
     `MIME-Version: 1.0`,
     `Content-Type: text/plain; charset=UTF-8`,
     `Content-Transfer-Encoding: 8bit`,
@@ -140,7 +140,7 @@ export default {
       fromAddress,
       toAddress,
       `"${name}" <${email}>`,
-      subject,
+      `ShadowComputers.co.uk Contact: ${subject} from ${name}`,
       emailBody,
     );
 

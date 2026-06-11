@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BgBracket from '../components/BgBracket.astro';
-import { TURNSTILE_SITE_KEY } from '../config';
 ---
 
 <BaseLayout
@@ -96,11 +95,9 @@ import { TURNSTILE_SITE_KEY } from '../config';
             <textarea id="message" name="message" placeholder="Tell me about what you need help with..." required maxlength="5000"></textarea>
           </div>
 
-          {TURNSTILE_SITE_KEY && (
           <div class="form-group">
-            <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-theme="dark"></div>
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAADiSF_qG5Z4ztNQO" data-theme="dark"></div>
           </div>
-          )}
 
           <button type="submit" class="btn-submit" id="contact-submit">
             <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
@@ -140,6 +137,11 @@ import { TURNSTILE_SITE_KEY } from '../config';
       message:                fd.get('message'),
       'cf-turnstile-response': fd.get('cf-turnstile-response') || '',
     };
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((payload.email || '').trim())) {
+      showMessage('Please enter a valid email address.', true);
+      return;
+    }
 
     btn.disabled  = true;
     btn.textContent = 'Sending…';

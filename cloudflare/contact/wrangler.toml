@@ -4,14 +4,15 @@ compatibility_date = "2025-01-01"
 
 # Route: intercepts /api/contact on the live domain before Cloudflare Pages handles it.
 # The Pages site handles everything else.
+# When the legacy shadowcomputers.co.uk zone moves to Cloudflare, add a second route entry for it.
 routes = [
-  { pattern = "shadowcomputers.co.uk/api/contact", zone_name = "shadowcomputers.co.uk" }
+  { pattern = "shadowcomputers.uk/api/contact", zone_name = "shadowcomputers.uk" }
 ]
 
 # Email binding — configure the destination address in the Cloudflare dashboard:
 # Workers & Pages → shadowcomputers-contact → Settings → Email bindings
 # Binding name: CONTACT_SEND_EMAIL
-# Destination:  hello@shadowcomputers.co.uk (must be verified in Email Routing)
+# Destination:  hello@shadowcomputers.uk (must be verified in Email Routing)
 [[send_email]]
 name = "CONTACT_SEND_EMAIL"
 
@@ -22,5 +23,5 @@ name = "CONTACT_SEND_EMAIL"
 
 [env.production]
 routes = [
-  { pattern = "shadowcomputers.co.uk/api/contact", zone_name = "shadowcomputers.co.uk" }
+  { pattern = "shadowcomputers.uk/api/contact", zone_name = "shadowcomputers.uk" }
 ]

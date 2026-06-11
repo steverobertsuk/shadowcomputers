@@ -126,8 +126,8 @@ export default {
       }
     }
 
-    const toAddress = env.CONTACT_EMAIL ?? "hello@shadowcomputers.co.uk";
-    const fromAddress = env.FROM_EMAIL ?? "contact@shadowcomputers.co.uk";
+    const toAddress = env.CONTACT_EMAIL ?? "hello@shadowcomputers.uk";
+    const fromAddress = env.FROM_EMAIL ?? "contact@shadowcomputers.uk";
 
     const emailBody = [
       `Name:    ${name}`,
@@ -140,7 +140,7 @@ export default {
       fromAddress,
       toAddress,
       `"${name}" <${email}>`,
-      `ShadowComputers.co.uk Contact: ${subject} from ${name}`,
+      `shadowcomputers.uk Contact: ${subject} from ${name}`,
       emailBody,
     );
 

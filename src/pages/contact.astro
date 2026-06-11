@@ -153,7 +153,12 @@ import BgBracket from '../components/BgBracket.astro';
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify(payload),
       });
-      var data = await res.json();
+      var data;
+      try {
+        data = await res.json();
+      } catch (_) {
+        throw new Error('The contact service is currently unavailable. Please email hello@shadowcomputers.uk directly.');
+      }
 
       if (data.ok) {
         showMessage('Your message has been sent. I’ll get back to you as soon as possible.', false);

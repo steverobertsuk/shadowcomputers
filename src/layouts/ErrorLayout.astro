@@ -8,7 +8,7 @@ const { errorCode, errorTitle, errorDesc } = Astro.props;
 
 // Error pages can be served by Cloudflare from any URL, so every asset and
 // link uses an absolute URL (mirrors the old Eleventy error-layout).
-const siteUrl = (Astro.site ?? new URL('https://shadowcomputers.co.uk')).href.replace(/\/$/, '');
+const siteUrl = (Astro.site ?? new URL('https://shadowcomputers.uk')).href.replace(/\/$/, '');
 
 const fontsHref =
   'https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap';

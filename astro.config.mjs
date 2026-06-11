@@ -8,7 +8,7 @@ const env = loadEnv("", process.cwd(), "");
 export default defineConfig({
   output: "static",
   integrations: [mdx()],
-  site: env.SITE ?? "https://shadowcomputers.co.uk",
+  site: env.SITE ?? "https://shadowcomputers.uk",
   adapter: cloudflare({
     imageService: "passthrough",
     configPath: "wrangler.dev.toml",

@@ -1,6 +1,6 @@
 # Shadow Computers — Website
 
-Static site for [shadowcomputers.co.uk](https://shadowcomputers.co.uk), built with [Astro](https://astro.build/). Uses the same configuration, build pipeline, and tooling as the MidNiteShadowOnline site.
+Static site for [shadowcomputers.uk](https://shadowcomputers.uk), built with [Astro](https://astro.build/). Uses the same configuration, build pipeline, and tooling as the MidNiteShadowOnline site.
 
 ## Tech stack
 
@@ -13,7 +13,7 @@ Static site for [shadowcomputers.co.uk](https://shadowcomputers.co.uk), built wi
 ## Project structure
 
 ```
-shadowcomputers.co.uk/
+shadowcomputers.uk/
 ├─ astro.config.mjs        # Astro config (static output, Cloudflare adapter)
 ├─ wrangler.toml           # Cloudflare Pages config (dist/client output)
 ├─ wrangler.dev.toml       # Local adapter config (no pages_build_output_dir)

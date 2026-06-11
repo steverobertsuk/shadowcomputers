@@ -11,7 +11,7 @@ const themeColor = '#3B82F6';
 const { title = '', description = siteDescription, pageScript = '' } = Astro.props;
 
 const pageTitle = title ? `${title} | ${siteName}` : siteName;
-const siteBase = Astro.site ?? 'https://shadowcomputers.co.uk';
+const siteBase = Astro.site ?? 'https://shadowcomputers.uk';
 const canonical = new URL(Astro.url.pathname, siteBase).href;
 const imageAlt = `${siteName} — ${siteDescription}`;
 

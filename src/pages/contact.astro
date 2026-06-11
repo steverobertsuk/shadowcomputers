@@ -157,7 +157,7 @@ import BgBracket from '../components/BgBracket.astro';
       try {
         data = await res.json();
       } catch (_) {
-        throw new Error('The contact service is currently unavailable. Please email hello@shadowcomputers.uk directly.');
+        throw new Error('The contact service is currently unavailable. Please email contact@shadowcomputers.uk directly.');
       }
 
       if (data.ok) {

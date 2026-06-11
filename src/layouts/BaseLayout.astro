@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import CookieBanner from '../components/CookieBanner.astro';
 import pkg from '../../package.json';
-import { GA_ID, CF_BEACON_TOKEN } from '../config';
+import { GA_ID } from '../config';
 
 const siteName = 'Shadow Computers';
 const siteDescription = 'Hosting, Web & Media Systems with part-time IT Support.';
@@ -20,7 +20,6 @@ const pageSlug =
   Astro.url.pathname.replace(/^\/|\/$/g, '').replace(/\//g, '-') || 'default';
 const ogImage = new URL(`/assets/og/${pageSlug}.png`, siteBase).href;
 const gaId = GA_ID;
-const cfToken = CF_BEACON_TOKEN;
 const pathname = Astro.url.pathname;
 const isActive = (href: string) => pathname === href;
 
@@ -215,16 +214,6 @@ const fontsHref =
         </p>
       </div>
     </footer>
-
-    {
-      cfToken && (
-        <script
-          defer
-          src="https://static.cloudflareinsights.com/beacon.min.js"
-          data-cf-beacon={`{"token": "${cfToken}"}`}
-        />
-      )
-    }
 
     {gaId && <CookieBanner gaId={gaId} />}
 

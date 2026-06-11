@@ -59,6 +59,26 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     );
   }
 
+  console.log('[contact] validation passed', {
+    nameLength: name.length,
+    emailDomain: email.split('@')[1],
+    subjectLength: subject.length,
+    messageLength: message.length,
+    hasTurnstileToken: turnstileToken.length > 0,
+  });
+
+  // Log env config shape (never values) to catch misconfiguration
+  console.log('[contact] env check', {
+    hasTurnstileSecret: Boolean(env.TURNSTILE_SECRET_KEY),
+    awsKeyIdPrefix: (env.AWS_ACCESS_KEY_ID ?? '').slice(0, 4),
+    awsKeyIdLength: (env.AWS_ACCESS_KEY_ID ?? '').length,
+    hasAwsSecret: Boolean(env.AWS_SECRET_ACCESS_KEY),
+    awsSecretLength: (env.AWS_SECRET_ACCESS_KEY ?? '').length,
+    region: env.AWS_REGION,
+    fromEmail: env.SES_FROM_EMAIL,
+    toEmail: env.SES_TO_EMAIL,
+  });
+
   // Verify Turnstile token
   const ip = request.headers.get('CF-Connecting-IP') ?? '';
   const tsResp = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
@@ -70,7 +90,12 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       remoteip: ip,
     }),
   });
-  const tsData = (await tsResp.json()) as { success: boolean };
+  const tsData = (await tsResp.json()) as { success: boolean; 'error-codes'?: string[] };
+  console.log('[contact] turnstile result', {
+    status: tsResp.status,
+    success: tsData.success,
+    errorCodes: tsData['error-codes'] ?? [],
+  });
   if (!tsData.success) {
     return json(
       { ok: false, error: 'Security check failed. Please refresh the page and try again.' },
@@ -103,14 +128,18 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     'Message.Body.Text.Charset': 'UTF-8',
   });
 
-  const sesResp = await aws.fetch(`https://email.${env.AWS_REGION}.amazonaws.com/`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: params.toString(),
-  });
+  const sesEndpoint = `https://email.${env.AWS_REGION}.amazonaws.com/`;
+  console.log('[contact] sending via SES', { endpoint: sesEndpoint });
 
-  if (!sesResp.ok) {
-    console.error('SES error', sesResp.status, await sesResp.text());
+  let sesResp: Response;
+  try {
+    sesResp = await aws.fetch(sesEndpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString(),
+    });
+  } catch (err) {
+    console.error('[contact] SES fetch threw', err instanceof Error ? err.message : String(err));
     return json(
       {
         ok: false,
@@ -120,5 +149,20 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     );
   }
 
+  const sesBody = await sesResp.text();
+  console.log('[contact] SES response', { status: sesResp.status, body: sesBody });
+
+  if (!sesResp.ok) {
+    console.error('[contact] SES error', sesResp.status, sesBody);
+    return json(
+      {
+        ok: false,
+        error: `Message could not be sent. Please email ${env.SES_TO_EMAIL} directly.`,
+      },
+      500,
+    );
+  }
+
+  console.log('[contact] message sent successfully');
   return json({ ok: true });
 };

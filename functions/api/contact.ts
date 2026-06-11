@@ -59,26 +59,6 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     );
   }
 
-  console.log('[contact] validation passed', {
-    nameLength: name.length,
-    emailDomain: email.split('@')[1],
-    subjectLength: subject.length,
-    messageLength: message.length,
-    hasTurnstileToken: turnstileToken.length > 0,
-  });
-
-  // Log env config shape (never values) to catch misconfiguration
-  console.log('[contact] env check', {
-    hasTurnstileSecret: Boolean(env.TURNSTILE_SECRET_KEY),
-    awsKeyIdPrefix: (env.AWS_ACCESS_KEY_ID ?? '').slice(0, 4),
-    awsKeyIdLength: (env.AWS_ACCESS_KEY_ID ?? '').length,
-    hasAwsSecret: Boolean(env.AWS_SECRET_ACCESS_KEY),
-    awsSecretLength: (env.AWS_SECRET_ACCESS_KEY ?? '').length,
-    region: env.AWS_REGION,
-    fromEmail: env.SES_FROM_EMAIL,
-    toEmail: env.SES_TO_EMAIL,
-  });
-
   // Verify Turnstile token
   const ip = request.headers.get('CF-Connecting-IP') ?? '';
   const tsResp = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
@@ -91,12 +71,8 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     }),
   });
   const tsData = (await tsResp.json()) as { success: boolean; 'error-codes'?: string[] };
-  console.log('[contact] turnstile result', {
-    status: tsResp.status,
-    success: tsData.success,
-    errorCodes: tsData['error-codes'] ?? [],
-  });
   if (!tsData.success) {
+    console.error('[contact] turnstile failed', tsData['error-codes'] ?? []);
     return json(
       { ok: false, error: 'Security check failed. Please refresh the page and try again.' },
       400,
@@ -132,7 +108,6 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   };
 
   const sesEndpoint = `https://email.${env.AWS_REGION}.amazonaws.com/v2/email/outbound-emails`;
-  console.log('[contact] sending via SES v2', { endpoint: sesEndpoint });
 
   let sesResp: Response;
   try {
@@ -152,11 +127,8 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     );
   }
 
-  const sesBody = await sesResp.text();
-  console.log('[contact] SES response', { status: sesResp.status, body: sesBody });
-
   if (!sesResp.ok) {
-    console.error('[contact] SES error', sesResp.status, sesBody);
+    console.error('[contact] SES error', sesResp.status, await sesResp.text());
     return json(
       {
         ok: false,
@@ -166,6 +138,5 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     );
   }
 
-  console.log('[contact] message sent successfully');
   return json({ ok: true });
 };

@@ -71,8 +71,6 @@ import BgBracket from '../components/BgBracket.astro';
       <div class="contact-form" role="region" aria-labelledby="form-heading">
         <h2 id="form-heading">Send a message</h2>
 
-        <div id="form-message" class="notice-box" hidden aria-live="polite"></div>
-
         <form id="contact-form" method="POST" action="/api/contact" novalidate>
 
           <div class="form-group">
@@ -103,6 +101,8 @@ import BgBracket from '../components/BgBracket.astro';
             <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
             Send message
           </button>
+
+          <div id="form-message" class="notice-box" hidden aria-live="polite"></div>
         </form>
       </div>
 

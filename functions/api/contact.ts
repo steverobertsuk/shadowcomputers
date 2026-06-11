@@ -103,7 +103,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     );
   }
 
-  // Send via SES query API
+  // Send via SES v2 API
   const aws = new AwsClient({
     accessKeyId: env.AWS_ACCESS_KEY_ID,
     secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
@@ -111,32 +111,35 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     service: 'ses',
   });
 
-  const params = new URLSearchParams({
-    Action: 'SendEmail',
-    Version: '2010-12-01',
-    Source: `"Shadow Computers Contact Form" <${env.SES_FROM_EMAIL}>`,
-    'Destination.ToAddresses.member.1': env.SES_TO_EMAIL,
-    'ReplyToAddresses.member.1': email,
-    'Message.Subject.Data': `ShadowComputers.uk Contact: ${subject} from ${name}`,
-    'Message.Subject.Charset': 'UTF-8',
-    'Message.Body.Text.Data': [
-      `Name:    ${name}`,
-      `Email:   ${email}`,
-      '',
-      message,
-    ].join('\n'),
-    'Message.Body.Text.Charset': 'UTF-8',
-  });
+  const sesPayload = {
+    FromEmailAddress: `"Shadow Computers Contact Form" <${env.SES_FROM_EMAIL}>`,
+    Destination: { ToAddresses: [env.SES_TO_EMAIL] },
+    ReplyToAddresses: [email],
+    Content: {
+      Simple: {
+        Subject: {
+          Data: `ShadowComputers.uk Contact: ${subject} from ${name}`,
+          Charset: 'UTF-8',
+        },
+        Body: {
+          Text: {
+            Data: [`Name:    ${name}`, `Email:   ${email}`, '', message].join('\n'),
+            Charset: 'UTF-8',
+          },
+        },
+      },
+    },
+  };
 
-  const sesEndpoint = `https://email.${env.AWS_REGION}.amazonaws.com/`;
-  console.log('[contact] sending via SES', { endpoint: sesEndpoint });
+  const sesEndpoint = `https://email.${env.AWS_REGION}.amazonaws.com/v2/email/outbound-emails`;
+  console.log('[contact] sending via SES v2', { endpoint: sesEndpoint });
 
   let sesResp: Response;
   try {
     sesResp = await aws.fetch(sesEndpoint, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: params.toString(),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(sesPayload),
     });
   } catch (err) {
     console.error('[contact] SES fetch threw', err instanceof Error ? err.message : String(err));

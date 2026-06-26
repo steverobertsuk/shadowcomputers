@@ -37,8 +37,8 @@
   },
   "devDependencies": {
     "@types/node": "^25.9.3",
-    "prettier": "^3.8.4",
+    "prettier": "^3.8.5",
     "prettier-plugin-astro": "^0.14.1",
-    "sharp": "^0.35.1"
+    "sharp": "^0.35.2"
   }
 }

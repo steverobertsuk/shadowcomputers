@@ -24,7 +24,7 @@
     "@resvg/resvg-wasm": "^2.6.2",
     "astro": "^6.4.6",
     "aws4fetch": "^1.0.20",
-    "satori": "^0.26.0",
+    "satori": "^0.28.0",
     "typescript": "^6.0.3"
   },
   "overrides": {
@@ -37,8 +37,8 @@
   },
   "devDependencies": {
     "@types/node": "^25.9.3",
-    "prettier": "^3.8.4",
+    "prettier": "^3.9.5",
     "prettier-plugin-astro": "^0.14.1",
-    "sharp": "^0.35.1"
+    "sharp": "^0.35.3"
   }
 }

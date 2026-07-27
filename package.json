@@ -18,13 +18,13 @@
     "release:major": "npm version major --no-git-tag-version"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.9",
+    "@astrojs/check": "^0.9.10",
     "@astrojs/cloudflare": "^13.6.1",
     "@astrojs/mdx": "^6.0.2",
     "@resvg/resvg-wasm": "^2.6.2",
     "astro": "^6.4.6",
     "aws4fetch": "^1.0.20",
-    "satori": "^0.26.0",
+    "satori": "^0.29.0",
     "typescript": "^6.0.3"
   },
   "overrides": {
@@ -37,8 +37,8 @@
   },
   "devDependencies": {
     "@types/node": "^25.9.3",
-    "prettier": "^3.8.4",
+    "prettier": "^3.9.6",
     "prettier-plugin-astro": "^0.14.1",
-    "sharp": "^0.35.1"
+    "sharp": "^0.35.3"
   }
 }
